@@ -62,5 +62,24 @@ public class UrlShortenerService {
 	private List<UrlEntity> checkOriginalUrlExists(OriginalUrl originalUrl) {
 		return repository.findAllByOriginalUrl(originalUrl.getUrl());
 	}
+	
+	/**
+     * @param shortenedString Base62 encoded string
+     * @return OriginalUrl object
+     */
+    public OriginalUrl getOriginalUrl(String shortenedString) {
+        logger.debug("Converting Base 62 string %s to Base 10 id");
+        Long id = BaseConversionUtil.encodedStringToId(shortenedString);
+        logger.info(String.format("Converted Base 62 string %s to Base 10 id %s", shortenedString, id));
+
+        logger.info(String.format("Retrieving full url for %d", id));
+        return new OriginalUrl(this.get(id).getOriginalUrl());
+    }
+    
+    private UrlEntity get(Long id) {
+        logger.info(String.format("Fetching URL for Id %d", id));
+        UrlEntity urlEntity = repository.findById(id).get();
+        return urlEntity;
+    }
 
 }
