@@ -3,34 +3,44 @@
 <head>
 <style>
 .center {
-  margin: auto;
-  width: 60%;
-  border: 3px solid #73AD21;
-  padding: 10px;
+	margin: auto;
+	width: 60%;
+	border: 3px solid #73AD21;
+	padding: 10px;
 }
 </style>
 </head>
 <body>
-<div class="center">
-	<input id="originalUrl" type="text" />
+	<div class="center">
+		<input id="originalUrl" type="text" />
 
-	<button onclick="getShortenedUrl()">Submit</button>
-	<br>
-
-	<label id="shortenedUrl"></label>
-	<div id="shortenUrlResponse"></div>
-	<script>
+		<button onclick="getShortenedUrl()">Submit</button>
+		<br> <label id="shortenedUrl"></label>
+		<div id="shortenUrlResponse"></div>
+		<script>
     function getShortenedUrl(){
     	var originalUrl = document.getElementById("originalUrl").value;
-    	console.log("Print original URL"+originalUrl);
     	urlparams = {
                 "url": originalUrl
             }
-
+    	
+    	 let options = {
+                method: 'POST',
+                headers: {
+    'Accept': 'application/json',
+                    'Content-Type':'application/json;charset=utf-8'
+                },
+                body: JSON.stringify(urlparams)
+            }
+            let fetchRes = fetch("http://localhost:9090/shortUrl",options);
+            fetchRes.then(res =>
+                res.json()).then(data => {
+                    console.log(data)
+                })
     }
     
     </script>
-    
-    </div>
+
+	</div>
 </body>
 </html>
