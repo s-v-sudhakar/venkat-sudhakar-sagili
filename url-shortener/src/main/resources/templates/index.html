@@ -35,7 +35,7 @@
             let fetchRes = fetch("http://localhost:9090/shortUrl",options);
             fetchRes.then(res =>
                 res.json()).then(data => {
-                    console.log(data)
+                	document.getElementById("shortenedUrl").innerHTML= data.shortenedUrl;
                 })
     }
     
