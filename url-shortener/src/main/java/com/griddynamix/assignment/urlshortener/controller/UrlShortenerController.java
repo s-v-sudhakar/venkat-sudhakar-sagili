@@ -6,6 +6,7 @@ import java.util.NoSuchElementException;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.validation.Valid;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -42,7 +43,7 @@ public class UrlShortenerController {
      */
 	
 	@PostMapping("/shortUrl")
-	public ResponseEntity<?> createShortenedUrl(@RequestBody OriginalUrl originalUrl, HttpServletRequest request) {
+	public ResponseEntity<?> createShortenedUrl(@Valid @RequestBody OriginalUrl originalUrl, HttpServletRequest request) {
 		String baseUrl = null;
 		
 		try {
