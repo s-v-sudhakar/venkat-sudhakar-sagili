@@ -21,7 +21,12 @@
 	<div id="shortenUrlResponse"></div>
 	<script>
     function getShortenedUrl(){
-    	console.log("Call successful");
+    	var originalUrl = document.getElementById("originalUrl").value;
+    	console.log("Print original URL"+originalUrl);
+    	urlparams = {
+                "url": originalUrl
+            }
+
     }
     
     </script>
