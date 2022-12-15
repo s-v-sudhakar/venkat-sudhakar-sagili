@@ -25,9 +25,10 @@ public class UrlRepositoryIntegrationTest {
 
     @Test
     public void shouldInsertAndGetFullurl() {
-        UrlEntity urlEntity = new UrlEntity("http://example.com");
+        UrlEntity urlEntity = new UrlEntity("http://test.com");
         urlShortenerRepository.save(urlEntity);
 
+        
         assertThat(urlEntity.getId(), notNullValue());
 
         UrlEntity urlEntityFromDb = urlShortenerRepository.findById(urlEntity.getId()).get();

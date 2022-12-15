@@ -6,8 +6,8 @@ import java.util.NoSuchElementException;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.validation.Valid;
 
+import org.apache.commons.validator.routines.UrlValidator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +22,7 @@ import org.springframework.web.server.ResponseStatusException;
 
 import com.griddynamix.assignment.urlshortener.dto.OriginalUrl;
 import com.griddynamix.assignment.urlshortener.dto.ShortenedUrl;
+import com.griddynamix.assignment.urlshortener.err.InvalidUrlMessageError;
 import com.griddynamix.assignment.urlshortener.service.UrlShortenerService;
 import com.griddynamix.assignment.urlshortener.utils.UrlUtil;
 
@@ -43,7 +44,21 @@ public class UrlShortenerController {
      */
 	
 	@PostMapping("/shortUrl")
-	public ResponseEntity<?> createShortenedUrl(@Valid @RequestBody OriginalUrl originalUrl, HttpServletRequest request) {
+	public ResponseEntity<?> createShortenedUrl(@RequestBody OriginalUrl originalUrl, HttpServletRequest request) {
+		
+		UrlValidator validator = new UrlValidator(new String[] {"http","https"});
+		
+		String url = originalUrl.getUrl();
+		
+		if(!validator.isValid(url)) {
+			logger.error("Malformed URL provided");
+			
+			InvalidUrlMessageError errorMsg = new InvalidUrlMessageError("url", originalUrl.getUrl(), "Invalid URL");
+			
+			return ResponseEntity.badRequest().body(errorMsg);
+		}
+		
+		
 		String baseUrl = null;
 		
 		try {

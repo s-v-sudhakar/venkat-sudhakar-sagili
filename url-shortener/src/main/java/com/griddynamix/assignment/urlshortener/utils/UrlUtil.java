@@ -1,6 +1,7 @@
 package com.griddynamix.assignment.urlshortener.utils;
 
 import java.net.MalformedURLException;
+import java.net.URISyntaxException;
 import java.net.URL;
 
 public class UrlUtil {
