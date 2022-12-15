@@ -22,16 +22,6 @@ This project depends on
 * h2 (for tests)
 * spring-boot-starter-test (for tests)
 
-### Running the application locally
-
-There are several ways to run a Spring Boot application on your local machine. One way is to execute the `main` method in the `com.griddynamix.assignment.urlshortener.UrlShortenerApplication` class from your IDE.
-
-Alternatively you can use the [Spring Boot Maven plugin](https://docs.spring.io/spring-boot/docs/current/reference/html/build-tool-plugins-maven-plugin.html) like so:
-
-```shell
-mvn spring-boot:run
-```
-
 ### Project Build
 
 To build this project, run
@@ -42,6 +32,15 @@ cd venkat-sudhakar-sagili/url-shortener
 mvn clean install
 ```
 
+### Running the application locally
+
+There are several ways to run a Spring Boot application on your local machine. One way is to execute the `main` method in the `com.griddynamix.assignment.urlshortener.UrlShortenerApplication` class from your IDE.
+
+Alternatively you can use the [Spring Boot Maven plugin](https://docs.spring.io/spring-boot/docs/current/reference/html/build-tool-plugins-maven-plugin.html) like so:
+
+```shell
+mvn spring-boot:run
+```
 
 ### API Endpoints
 
