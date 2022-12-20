@@ -17,21 +17,30 @@ import com.griddynamix.assignment.urlshortener.utils.BaseConversionUtil;
 public class UrlShortenerService {
 	
 	Logger logger = LoggerFactory.getLogger(UrlShortenerService.class); 
-
+	
 	private final UrlShortenerRepository repository;
 
+	/**
+	 * Instantiates a new url shortener service.
+	 *
+	 * @param repository the repository
+	 */
 	@Autowired
 	public UrlShortenerService(UrlShortenerRepository repository) {
 		this.repository = repository;
 	}
 
 	/**
-     * @param originalUrl OriginalUrl object to be converted to shortened URL
-     * @return ShortenedUrl object
-     */
+	 * Gets the shortened url from the Original URL.
+	 *
+	 * @param originalUrl OriginalUrl object to be converted to shortened URL
+	 * @return ShortenedUrl object
+	 */
 	public ShortenedUrl getShortenedUrl(OriginalUrl originalUrl) {
 
 		List<UrlEntity> savedUrls = null;
+		String shortUrlText = null;
+		
 		savedUrls = checkOriginalUrlExists(originalUrl);
 
 		UrlEntity savedUrl = null;
@@ -39,34 +48,56 @@ public class UrlShortenerService {
 			logger.info(String.format("URL %s saved in database", originalUrl.getUrl()));
 			savedUrl = this.save(originalUrl);
 			logger.debug(savedUrl.toString());
+			logger.debug(String.format("Converting Base 10 %d to Base 62 string", savedUrl.getId()));
+			shortUrlText = BaseConversionUtil.idToEncodedString(savedUrl.getId());
+			savedUrl.setShortenedUrl(shortUrlText);
+			this.persistShortUrlText(savedUrl);
+			logger.info(String.format("Converted Base 10 %d to Base 62 string %s", savedUrl.getId(), shortUrlText));
 		} else {
 			savedUrl = savedUrls.get(0);
 			logger.info(String.format("Insertion Skipped. URL: %s already exists in the database.", savedUrl));
+			shortUrlText = savedUrl.getShortenedUrl();
 		}
-
-		logger.debug(String.format("Converting Base 10 %d to Base 62 string", savedUrl.getId()));
-		String shortUrlText = BaseConversionUtil.idToEncodedString(savedUrl.getId());
-		logger.info(String.format("Converted Base 10 %d to Base 62 string %s", savedUrl.getId(), shortUrlText));
 
         return new ShortenedUrl(shortUrlText);
 	}
 
+	/**
+	 * Save the Original URL in database.
+	 *
+	 * @param originalUrl the original url
+	 * @return the url entity
+	 */
 	private UrlEntity save(OriginalUrl originalUrl) {
 		return repository.save(new UrlEntity(originalUrl.getUrl()));
 	}
+	
+	/**
+	 * Persist short url text with respect to the saved UrlEntity.
+	 *
+	 * @param entity the entity
+	 * @return the url entity
+	 */
+	private UrlEntity persistShortUrlText(UrlEntity entity) {
+		return repository.save(entity);
+	}
 
 	/**
-     * @param originalUrl
-     * @return list of UrlEntity objects, list will be empty if no results found
-     */
+	 * Check if original url exists and if yes, return those entries.
+	 *
+	 * @param originalUrl the original url
+	 * @return list of UrlEntity objects, list will be empty if no results found
+	 */
 	private List<UrlEntity> checkOriginalUrlExists(OriginalUrl originalUrl) {
 		return repository.findAllByOriginalUrl(originalUrl.getUrl());
 	}
 	
 	/**
-     * @param shortenedString Base62 encoded string
-     * @return OriginalUrl object
-     */
+	 * Gets the original url for the corresponding .
+	 *
+	 * @param shortenedString Base62 encoded string
+	 * @return OriginalUrl object
+	 */
     public OriginalUrl getOriginalUrl(String shortenedString) {
         logger.debug("Converting Base 62 string %s to Base 10 id");
         Long id = BaseConversionUtil.encodedStringToId(shortenedString);
@@ -76,6 +107,12 @@ public class UrlShortenerService {
         return new OriginalUrl(this.get(id).getOriginalUrl());
     }
     
+    /**
+     * Gets the URL Entity from ID.
+     *
+     * @param id the id
+     * @return the url entity
+     */
     private UrlEntity get(Long id) {
         logger.info(String.format("Fetching URL for Id %d", id));
         UrlEntity urlEntity = repository.findById(id).get();
