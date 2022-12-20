@@ -101,9 +101,7 @@ To do URL shortening we can use hashing techniques like MD5 or Base62.
 
 1. MD5 Encoding: MD5 also gives Base62 output but the MD5 hash gives a lengthy output which is more than 7 characters. MD5 can create a lot of collisions. For two or many different long URL inputs we may get the same unique id for a short URL and that could cause data corruption.
 
-2. Base62 Encoding: Performing a Base62 conversion from Base10 on the id of stored originalUrl. Base62 encoder allows us to use the combination of characters and numbers(a-z,A-Z,0-9) a total of 62 characters. For 7 characters long we can serve 62^7 ~= 3500 billion URLs which is quite enough in comparison to base10
-
-With the Base conversion approach, even the maximum value of Long produces 10 characters which is still somewhat easy to remember. 
+2. Base62 Encoding: Performing a Base62 conversion from Base10 on the id of stored originalUrl. Base62 encoder allows us to use the combination of characters and numbers(a-z,A-Z,0-9) a total of 62 characters. For 7 characters long we can serve 62^7 ~= 3500 billion URLs which is quite enough in comparison to base10. With the Base conversion approach, even the maximum value of Long produces 10 characters which is still somewhat easy to remember. 
 
 > There is a dependency from Google named Guava that could be used here to generate hashes. Although murmur_3_32 hash implemented in Guava was generating up to 10 characters long string, I left it for future testing and evaluation.
 
